@@ -1,4 +1,16 @@
-// ============================================================
+
+  "name": "alojamientosmdq-web",
+  "version": "1.0.0",
+  "private": true,
+  "type": "module",
+  "description": "Sitio web de AlojamientosMDQ (Casa Bruna y Casa Marea) con calendario sincronizado a Booking y Airbnb.",
+  "scripts": {
+    "dev": "vercel dev"
+  },
+  "engines": {
+    "node": ">=18"
+  }
+}// ============================================================
 // /api/availability.js
 // Función serverless (Vercel) que lee los calendarios iCal de
 // Booking y Airbnb de la casa pedida, los combina, y devuelve
