@@ -25,8 +25,8 @@
   --edge: 1px solid var(--line);
 }
 * { box-sizing: border-box; }
-html { scroll-behavior: smooth; }
-body { margin:0; background:var(--paper); color:var(--ink); font-family:var(--font-body); font-size:16px; line-height:1.55; -webkit-font-smoothing:antialiased; }
+html { scroll-behavior: smooth; overflow-x: hidden; max-width: 100%; }
+body { margin:0; overflow-x:hidden; max-width:100%; background:var(--paper); color:var(--ink); font-family:var(--font-body); font-size:16px; line-height:1.55; -webkit-font-smoothing:antialiased; }
 img { max-width:100%; display:block; }
 a { color:inherit; }
 h1,h2,h3,h4 { font-family:var(--font-display); font-weight:500; line-height:1.08; margin:0; letter-spacing:-0.01em; }
@@ -300,8 +300,7 @@ p { margin:0; }
 <div data-view="home" class="active">
   <section class="hero">
     <div class="hero-bg">
-      <img class="hero-bg-img" id="hero-bg-a" alt="" />
-      <img class="hero-bg-img" id="hero-bg-b" alt="" />
+      <img class="hero-bg-img active" id="hero-bg-a" alt="" src="/524663136.jpg" />
     </div>
     <div class="hero-scrim"></div>
     <div class="wrap">
@@ -413,7 +412,7 @@ p { margin:0; }
           <p class="eyebrow">Bienvenidos a AlojamientosMDQ</p>
           <h2>Por qué elegirnos</h2>
         </div>
-        <p>Somos marplatenses a tiempo completo. Nuestras propiedades están a 5 cuadras de Punta Mogotes y a pasos de las mejores playas del sur.</p>
+        <p>Somos marplatenses a tiempo completo. Nuestras propiedades están a 5 cuadras de Punta Mogotes y a pasos de las mejores playas del sur de Mar del Plata: zona Faro y los acantilados.</p>
       </div>
       <div class="why-grid">
         <div class="why-item">
@@ -553,27 +552,6 @@ setTimeout(() => {
   const splash = document.getElementById("splash");
   if (splash) splash.classList.add("hide");
 }, 1300);
-
-// Fondo rotativo del hero (fotos reales de las casas, con crossfade)
-const HERO_ROTATION = ["524663136.jpg", "839023148.jpg", "630541402.jpg", "878998217.jpg", "839030507.jpg", "624930394.jpg"];
-(function initHeroRotation() {
-  const imgs = [document.getElementById("hero-bg-a"), document.getElementById("hero-bg-b")];
-  if (!imgs[0] || !imgs[1]) return;
-  let active = 0;
-  let idx = 0;
-  imgs[0].src = HERO_ROTATION[0];
-  imgs[0].onload = () => imgs[0].classList.add("active");
-  setInterval(() => {
-    idx = (idx + 1) % HERO_ROTATION.length;
-    const next = active === 0 ? 1 : 0;
-    imgs[next].src = HERO_ROTATION[idx];
-    imgs[next].onload = () => {
-      imgs[next].classList.add("active");
-      imgs[active].classList.remove("active");
-      active = next;
-    };
-  }, 5000);
-})();
 
 const HOUSES = {
   bruna: {
