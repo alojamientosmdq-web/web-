@@ -475,6 +475,7 @@ p { margin:0; }
             <div class="price" id="booking-price">—<span>/ noche</span></div>
           </div>
           <div class="booking-body">
+            <p style="font-size:.74rem; color:var(--mist); margin-bottom:14px; font-family:var(--font-mono);">Los precios varían según la temporada (diciembre a marzo tiene tarifas especiales) — el total exacto se calcula solo al elegir las fechas.</p>
             <div id="calendar"></div>
             <div class="booking-summary">
               <div class="row"><span>Check-in</span><span id="sum-checkin">—</span></div>
@@ -547,6 +548,31 @@ const WHATSAPP_NUMBER = "5492236156456";
 const BASE_OCCUPANCY = 2;
 const EXTRA_GUEST_FEE = 10000;
 
+// ============================================================
+// Temporadas y precios especiales (temporada 2026–2027)
+// Se revisan de arriba hacia abajo: las más específicas
+// (Carnaval, Semana Santa) van primero para pisar a las generales.
+// "flat: true" = precio total fijo por noche, sin recargo por
+// huésped extra. "flat: false" = precio base + recargo normal.
+// ============================================================
+const SEASONS = [
+  { start: "2027-02-06", end: "2027-02-08", rate: 300000, flat: true, label: "Carnaval" },
+  { start: "2027-03-25", end: "2027-03-27", rate: 200000, flat: true, label: "Semana Santa" },
+  { start: "2026-12-31", end: "2027-01-31", rate: 350000, flat: true, label: "Temporada alta (Enero)" },
+  { start: "2027-02-01", end: "2027-02-28", rate: 250000, flat: true, label: "Temporada alta (Febrero)" },
+  { start: "2027-03-01", end: "2027-03-31", rate: 150000, flat: true, label: "Marzo" },
+  { start: "2026-12-21", end: "2026-12-30", rate: 180000, flat: false, label: "Diciembre (21-30)" },
+  { start: "2026-12-01", end: "2026-12-20", rate: 130000, flat: false, label: "Diciembre (1-20)" },
+  { start: "2026-09-01", end: "2026-11-30", rate: 95000, flat: false, label: "Set/Oct/Nov" },
+];
+
+function getNightRate(dateStr, basePrice) {
+  for (const season of SEASONS) {
+    if (dateStr >= season.start && dateStr <= season.end) return season;
+  }
+  return { rate: basePrice, flat: false, label: null };
+}
+
 // Pantalla de carga: se muestra un mínimo de tiempo y se oculta sola
 setTimeout(() => {
   const splash = document.getElementById("splash");
@@ -575,6 +601,7 @@ const HOUSES = {
     tagline: "Planta alta — Hasta 5 personas — A 5 cuadras del mar",
     price: 95000, capacity: 5,
     hero: "/624930394.jpg",
+    cardImage: "/630541379.jpg",
     plaqueTag: "PLANTA ALTA · 5 PERS.",
     rooms: [
       { title:"Habitación principal", text:"Cama matrimonial, ropa de cama y toallas incluidas, espacio de guardado, calefacción eléctrica y ventilador de pie. Salida a balcón.", img:"/624930394.jpg" },
@@ -658,7 +685,7 @@ function renderPropertyGrid() {
   grid.innerHTML = Object.values(HOUSES).map(h => `
     <button class="property-card" onclick="showCasa('${h.id}')">
       <div class="thumb">
-        <img src="${h.hero}" alt="${h.name}" />
+        <img src="${h.cardImage || h.hero}" alt="${h.name}" />
         <div class="plaque">${h.plaqueTag}</div>
       </div>
       <div class="body">
@@ -817,22 +844,48 @@ async function initBookingWidget(houseId, house) {
     return guests > house.capacity;
   }
 
-  function pricePerNight() {
-    return house.price + extraGuests() * EXTRA_GUEST_FEE;
+  // Recorre noche por noche entre checkin y checkout, sumando el
+  // precio que corresponda según la temporada de cada noche.
+  function computeStay() {
+    if (!cal.checkin || !cal.checkout) return { total: 0, hasFlat: false, hasNormal: false, seasonLabels: new Set() };
+    const extra = extraGuests();
+    let total = 0, hasFlat = false, hasNormal = false;
+    const seasonLabels = new Set();
+    const d = new Date(cal.checkin);
+    while (d < cal.checkout) {
+      const season = getNightRate(fmt(d), house.price);
+      if (season.flat) {
+        total += season.rate;
+        hasFlat = true;
+      } else {
+        total += season.rate + extra * EXTRA_GUEST_FEE;
+        hasNormal = true;
+      }
+      if (season.label) seasonLabels.add(season.label);
+      d.setDate(d.getDate() + 1);
+    }
+    return { total, hasFlat, hasNormal, seasonLabels };
   }
 
   function updateSummary(){
     const n=nights(cal.checkin,cal.checkout);
     inEl.textContent=formatDateHuman(cal.checkin); outEl.textContent=formatDateHuman(cal.checkout);
     nightsEl.textContent=n;
+
+    const stay = computeStay();
     const extra = extraGuests();
-    if (extra > 0) {
+
+    if (extra > 0 && stay.hasNormal && !stay.hasFlat) {
       extraRow.style.display = "flex";
       extraEl.textContent = `${money(extra * EXTRA_GUEST_FEE)} / noche (${extra} ${extra === 1 ? "persona" : "personas"})`;
+    } else if (extra > 0 && stay.hasFlat) {
+      extraRow.style.display = "flex";
+      extraEl.textContent = "Incluido (tarifa de temporada, precio total sin recargo por huésped)";
     } else {
       extraRow.style.display = "none";
     }
-    totalEl.textContent = n>0 ? money(n*pricePerNight()) : "—";
+
+    totalEl.textContent = n>0 ? money(stay.total) : "—";
 
     const overCapacity = exceedsCapacity();
     capacityWarning.style.display = overCapacity ? "block" : "none";
@@ -846,7 +899,7 @@ async function initBookingWidget(houseId, house) {
 
   reserveBtn.onclick = () => {
     if(!cal.checkin||!cal.checkout) return;
-    const n=nights(cal.checkin,cal.checkout); const total=n*pricePerNight();
+    const n=nights(cal.checkin,cal.checkout); const total=computeStay().total;
     const name=nameInput.value.trim(); const guests=guestsInput.value.trim();
     const lines=[
       `Hola! Quiero reservar *${house.name}* 🏡`,
