@@ -69,7 +69,7 @@ function expandRange(start, end) {
   return days;
 }
 
-export default async function handler(req, res) {
+module.exports = async function handler(req, res) {
   res.setHeader("Cache-Control", "s-maxage=1800, stale-while-revalidate=3600");
 
   const house = (req.query.house || "").toLowerCase();
