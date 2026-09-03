@@ -7,8 +7,108 @@
 <meta name="description" content="Dos casas a estrenar a 5 cuadras del mar en Mar del Plata. Consultá disponibilidad, precios y reglas, y reservá directo con nosotros." />
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,400;9..144,500;9..144,600;9..144,700&family=Public+Sans:wght@400;500;600;700&family=IBM+Plex+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+  ...
+@media (max-width: 640px) {
+  .promo-float { left: 16px; right: 16px; bottom: 16px; justify-content: center; }
+}
+</style> <!-- AQUÍ TERMINAN TUS ESTILOS -->
+
+<!-- PEGA EL CÓDIGO JSON-LD AQUÍ MISMO -->
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@graph": [
+    {
+      "@type": "VacationRental",
+      "@id": "https://alojamientosmdq.com.ar/#casabruna",
+      "name": "Casa Bruna - AlojamientosMDQ",
+      "description": "Casa a estrenar a 5 cuadras del mar en Punta Mogotes, Mar del Plata.",
+      "url": "https://alojamientosmdq.com.ar",
+      "telephone": "+5492236156456",
+      "address": {
+        "@type": "PostalAddress",
+        "streetAddress": "Velez Sarfield 498",
+        "addressLocality": "Mar del Plata",
+        "addressRegion": "Buenos Aires",
+        "postalCode": "7600",
+        "addressCountry": "AR"
+      },
+      "geo": {
+        "@type": "GeoCoordinates",
+        "latitude": -38.0583,
+        "longitude": -57.5458
+      },
+      "checkinTime": "15:00",
+      "checkoutTime": "10:00",
+      "numberOfRooms": 2,
+      "petsAllowed": true,
+      "priceRange": "$$",
+      "potentialAction": {
+        "@type": "ReserveAction",
+        "target": {
+          "@type": "EntryPoint",
+          "urlTemplate": "https://alojamientosmdq.com.ar/?casa=bruna",
+          "inLanguage": "es-AR",
+          "actionPlatform": [
+            "http://schema.org/DesktopWebPlatform",
+            "http://schema.org/MobileWebPlatform"
+          ]
+        },
+        "result": {
+          "@type": "LodgingReservation"
+        }
+      }
+    },
+    {
+      "@type": "VacationRental",
+      "@id": "https://alojamientosmdq.com.ar/#casamarea",
+      "name": "Casa Marea - AlojamientosMDQ",
+      "description": "Casa moderna totalmente equipada en Punta Mogotes, Mar del Plata.",
+      "url": "https://alojamientosmdq.com.ar",
+      "telephone": "+5492236156456",
+      "address": {
+        "@type": "PostalAddress",
+        "streetAddress": "Velez Sarfield 498",
+        "addressLocality": "Mar del Plata",
+        "addressRegion": "Buenos Aires",
+        "postalCode": "7600",
+        "addressCountry": "AR"
+      },
+      "geo": {
+        "@type": "GeoCoordinates",
+        "latitude": -38.0583,
+        "longitude": -57.5458
+      },
+      "checkinTime": "15:00",
+      "checkoutTime": "10:00",
+      "numberOfRooms": 2,
+      "petsAllowed": true,
+      "priceRange": "$$",
+      "potentialAction": {
+        "@type": "ReserveAction",
+        "target": {
+          "@type": "EntryPoint",
+          "urlTemplate": "https://alojamientosmdq.com.ar/?casa=marea",
+          "inLanguage": "es-AR",
+          "actionPlatform": [
+            "http://schema.org/DesktopWebPlatform",
+            "http://schema.org/MobileWebPlatform"
+          ]
+        },
+        "result": {
+          "@type": "LodgingReservation"
+        }
+      }
+    }
+  ]
+}
+</script>
+
+</head> <!-- AQUÍ CIERRA LA CABECERA -->
+<body>
+...
 <style>
-:root {
+  :root {
   --ink: #111111;
   --paper: #ffffff;
   --paper-dim: #f3f3f1;
