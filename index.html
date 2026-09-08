@@ -567,10 +567,56 @@ p { margin:0; }
     <div class="wrap">
       <div class="casa-layout">
         <div>
-          <p class="eyebrow">Ambientes</p>
-          <h2 style="margin-top:12px; font-size:1.9rem;">Cómo es por dentro</h2>
-          <div class="room-list" id="room-list" style="margin-top:26px;"></div>
+        <p class="eyebrow">Ambientes</p>
+<h2 style="margin-top:12px; font-size:1.9rem;">Cómo es por dentro</h2>
 
+<div class="room-list" id="room-list" style="margin-top:26px;">
+  
+  <!-- Habitación 1 -->
+  <div class="room" onclick="openGallery(['img/casa-bruna-1.webp', 'img/casa-bruna-2.webp'])">
+    <div class="room-thumb-wrapper">
+      <img src="img/casa-bruna-1.webp" alt="Dormitorio Principal" />
+    </div>
+    <div class="room-info">
+      <h4>Dormitorio Principal</h4>
+      <p>Cama matrimonial, sommier y placard espacioso.</p>
+    </div>
+  </div>
+
+  <!-- Habitación 2 -->
+  <div class="room" onclick="openGallery(['img/casa-bruna-2.webp', 'img/casa-bruna-1.webp'])">
+    <div class="room-thumb-wrapper">
+      <img src="img/casa-bruna-2.webp" alt="Segundo Dormitorio" />
+    </div>
+    <div class="room-info">
+      <h4>Segundo Dormitorio</h4>
+      <p>Dos camas individuales de una plaza y media.</p>
+    </div>
+  </div>
+
+  <!-- Estar / Living -->
+  <div class="room" onclick="openGallery(['img/casa-bruna-3.webp'])">
+    <div class="room-thumb-wrapper">
+      <img src="img/casa-bruna-3.webp" alt="Estar / Living" />
+    </div>
+    <div class="room-info">
+      <h4>Estar / Living</h4>
+      <p>Sillón confort, Smart TV y excelente iluminación natural.</p>
+    </div>
+  </div>
+
+</div>
+
+<!-- VISOR LIGHTBOX (Popup deslizable) -->
+<div class="lightbox" id="lightbox">
+  <button class="lightbox-close" onclick="closeLightbox()">&times;</button>
+  <button class="lightbox-prev" onclick="changeImage(-1)">&#10094;</button>
+  <div class="lightbox-stage" id="lightbox-stage">
+    <img id="lightbox-img" src="" alt="Ambiente" />
+  </div>
+  <button class="lightbox-next" onclick="changeImage(1)">&#10095;</button>
+  <div class="lightbox-counter" id="lightbox-counter">1 / 1</div>
+</div>
           <p class="eyebrow" style="margin-top:56px;">Galería</p>
           <div class="gallery" id="gallery"></div>
 
