@@ -1083,5 +1083,82 @@ async function initBookingWidget(houseId, house) {
 }
 </script>
 <script defer src="/_vercel/insights/script.js"></script>
+<!-- CÓDIGO GALERÍA / SWIPE TÁCTIL Y ESTILOS -->
+<style>
+  .room-list { display: flex; flex-direction: column; gap: 16px; }
+  .room { display: flex; gap: 16px; align-items: center; background: rgba(255, 255, 255, 0.03); padding: 12px; border-radius: 12px; border: 1px solid rgba(255, 255, 255, 0.08); cursor: pointer; transition: background 0.2s ease; }
+  .room:hover { background: rgba(255, 255, 255, 0.07); }
+  .room-thumb-wrapper { position: relative; width: 90px; height: 70px; flex-shrink: 0; border-radius: 8px; overflow: hidden; }
+  .room-thumb-wrapper img { width: 100%; height: 100%; object-fit: cover; }
+  .room-thumb-wrapper::after { content: "🔍 Ver"; position: absolute; inset: 0; background: rgba(0, 0, 0, 0.5); color: #fff; font-size: 0.65rem; font-weight: 600; display: flex; align-items: center; justify-content: center; opacity: 0; transition: opacity 0.2s ease; }
+  .room:hover .room-thumb-wrapper::after { opacity: 1; }
+  .room-info h4 { margin: 0 0 4px 0; font-size: 1rem; }
+  .room-info p { margin: 0; font-size: 0.85rem; opacity: 0.7; }
+  .lightbox { position: fixed; inset: 0; background: rgba(0, 0, 0, 0.9); z-index: 9999; display: none; align-items: center; justify-content: center; }
+  .lightbox.open { display: flex; }
+  .lightbox-stage { width: 100%; height: 100%; display: flex; align-items: center; justify-content: center; touch-action: pan-y; user-select: none; }
+  .lightbox img { max-width: 90vw; max-height: 80vh; object-fit: contain; }
+  .lightbox-close, .lightbox-prev, .lightbox-next { position: absolute; background: none; border: none; color: white; font-size: 2rem; cursor: pointer; z-index: 10000; padding: 10px; }
+  .lightbox-close { top: 20px; right: 20px; }
+  .lightbox-prev { left: 20px; top: 50%; transform: translateY(-50%); }
+  .lightbox-next { right: 20px; top: 50%; transform: translateY(-50%); }
+  .lightbox-counter { position: absolute; bottom: 25px; color: #fff; font-size: 0.85rem; letter-spacing: 1px; }
+</style>
+
+<script>
+let currentGallery = [];
+let currentIndex = 0;
+let touchStartX = 0;
+let touchEndX = 0;
+
+function openGallery(imagesArray, startIndex = 0) {
+  if (!imagesArray || imagesArray.length === 0) return;
+  currentGallery = imagesArray;
+  currentIndex = startIndex;
+  updateLightbox();
+  document.getElementById('lightbox').classList.add('open');
+}
+
+function closeLightbox() {
+  document.getElementById('lightbox').classList.remove('open');
+}
+
+function updateLightbox() {
+  const img = document.getElementById('lightbox-img');
+  const counter = document.getElementById('lightbox-counter');
+  
+  img.src = currentGallery[currentIndex];
+  counter.textContent = `${currentIndex + 1} / ${currentGallery.length}`;
+}
+
+function changeImage(direction) {
+  currentIndex += direction;
+  if (currentIndex < 0) currentIndex = currentGallery.length - 1;
+  if (currentIndex >= currentGallery.length) currentIndex = 0;
+  updateLightbox();
+}
+
+const stage = document.getElementById('lightbox-stage');
+
+stage.addEventListener('touchstart', e => {
+  touchStartX = e.changedTouches[0].screenX;
+}, { passive: true });
+
+stage.addEventListener('touchend', e => {
+  touchEndX = e.changedTouches[0].screenX;
+  const threshold = 40;
+  if (touchEndX < touchStartX - threshold) changeImage(1);
+  if (touchEndX > touchStartX + threshold) changeImage(-1);
+}, { passive: true });
+
+document.addEventListener('keydown', e => {
+  const lb = document.getElementById('lightbox');
+  if (lb && lb.classList.contains('open')) {
+    if (e.key === 'ArrowRight') changeImage(1);
+    if (e.key === 'ArrowLeft') changeImage(-1);
+    if (e.key === 'Escape') closeLightbox();
+  }
+});
+</script>
 </body>
 </html>
