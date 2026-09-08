@@ -1080,7 +1080,9 @@ async function initBookingWidget(houseId, house) {
     lines.push("¿Está disponible? Quedo atento/a para confirmar. Gracias!");
     window.open(`https://wa.me/${WHATSAPP_NUMBER}?text=${encodeURIComponent(lines.join("\n"))}`, "_blank");
   };
-<style>
+  </script>
+
+  <style>
   .room-list { display: flex; flex-direction: column; gap: 16px; max-width: 500px; }
   .room { display: flex; gap: 16px; align-items: center; background: rgba(255, 255, 255, 0.05); padding: 12px; border-radius: 12px; border: 1px solid rgba(255, 255, 255, 0.1); cursor: pointer; transition: transform 0.2s ease; }
   .room:hover { transform: translateY(-2px); }
